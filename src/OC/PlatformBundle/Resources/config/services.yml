@@ -1,0 +1,11 @@
+services:
+#    oc_platform.example:
+#        class: OC\PlatformBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+    oc_platform.antispam:
+        class: OC\PlatformBundle\Antispam\OCAntispam
+        arguments:
+            - "@mailer" #Service Mailer
+            - %locale% #Paramètre local pour récupérer la langue, définie dans app/config/parameters.yml
+            - 50 #Le nombre 50

@@ -1,0 +1,17 @@
+{% extends "CoreBundle::layout.html.twig" %}
+
+{% block index %}
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h1>Page d'accueil</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h4>Nos dernières annonces:</h4>
+        {{ render(controller("OCPlatformBundle:Advert:menu", { 'limit': 3 } ))}}
+    </div>
+</div>
+
+{% endblock %}

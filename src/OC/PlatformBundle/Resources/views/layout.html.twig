@@ -1,0 +1,21 @@
+{% extends "CoreBundle::layout.html.twig" %}
+
+{% block title %}
+  Annonces - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+  {# Sous-titre commun à toutes les pages du bundle #}
+  <h1>Annonces</h1>
+
+  <hr>
+
+  {# Nouveau bloc pour les vues du bundle #}
+  {% block ocplatform_body %}
+
+  {# Ici se trouveront les vues du bundle, add, edit ... #}
+  
+  {% endblock %}
+
+{% endblock %}
