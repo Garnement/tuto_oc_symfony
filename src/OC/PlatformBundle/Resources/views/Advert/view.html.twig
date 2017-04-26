@@ -13,6 +13,22 @@
     {{ advert.content }}
   </div>
 
+  {% if advert.image is not null %}
+    <img src="{{ advert.image.url }}" alt="{{ advert.image.alt}}">
+  {% endif %}
+
+  <h4>Liste des candidats pour ce post:</h4>
+  {% if listApplication|length > 0 %}
+      <ul>
+        {% for app in listApplication %}
+        <li>{{ app.author }}</li>
+        {% endfor %}
+      </ul>
+  {% else %}
+   <p> Soyez le premier à postuler !</p>
+
+    {% endif %}
+
   <p>
     <a href="{{ path('oc_platform_home') }}" class="btn btn-default">
       <i class="glyphicon glyphicon-chevron-left"></i>

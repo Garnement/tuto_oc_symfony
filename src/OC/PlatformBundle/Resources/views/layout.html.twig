@@ -4,18 +4,29 @@
   Annonces - {{ parent() }}
 {% endblock %}
 
+
 {% block body %}
+<div class="row">
+  <div class="col-md-12 text-center">
+    {# Sous-titre commun à toutes les pages du bundle #}
+    <h1>Annonces</h1>
+  </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-4">
+        <h4><a href="{{ path('oc_platform_add') }}">Ajouter une annonce</a></h4>
+        <h4>Nos dernières annonces:</h4>
+        {{ render(controller("OCPlatformBundle:Advert:menu", { 'limit': 3 } ))}}
+    </div>
 
-  {# Sous-titre commun à toutes les pages du bundle #}
-  <h1>Annonces</h1>
-
-  <hr>
-
+    <div class="col-md-8">
   {# Nouveau bloc pour les vues du bundle #}
   {% block ocplatform_body %}
 
   {# Ici se trouveront les vues du bundle, add, edit ... #}
-  
-  {% endblock %}
 
+  {% endblock %}
+    </div>
+</div>
 {% endblock %}
