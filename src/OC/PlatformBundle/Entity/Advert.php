@@ -62,6 +62,11 @@ class Advert
     */
     private $image;
 
+     /**
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Application", mappedBy="advert")
+     */
+    private $applications; // Une annonce est liée à plusieurs candidatures.
+
 
     public function __construct()
     {
@@ -264,5 +269,58 @@ class Advert
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    public function isCategory($catId)
+    {
+      // Si l'annnce ne possède n'a pas de catégorie, false est renvoyé
+      if( count($this->categories) == 0 ) return false;
+      // On parcourt les catégories de l'annonce 
+      foreach($this->categories as $cat)
+      {
+        //catId représente le paramètre de la fonction dans la vue
+        if ($catId->id == $catId) return true;
+      }
+      return false;
+    }
+
+    /**
+     * Add application
+     *
+     * @param \OC\PlatformBundle\Entity\Application $application
+     *
+     * @return Advert
+     */
+    public function addApplication(\OC\PlatformBundle\Entity\Application $application)
+    {
+        $this->applications[] = $application;
+
+        // Liaison de l'annonce à la candidature
+        $application->setAdvert($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove application
+     *
+     * @param \OC\PlatformBundle\Entity\Application $application
+     */
+    public function removeApplication(\OC\PlatformBundle\Entity\Application $application)
+    {
+        $this->applications->removeElement($application);
+
+        // Si la relation était facultative (nullable=true)
+        // $application->setAdvert(null);
+    }
+
+    /**
+     * Get applications
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getApplications()
+    {
+        return $this->applications;
     }
 }

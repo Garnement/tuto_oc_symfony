@@ -14,7 +14,7 @@
   </div>
 
   {% if advert.image is not null %}
-    <img src="{{ advert.image.url }}" alt="{{ advert.image.alt}}">
+    <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
   {% endif %}
 
   <h4>Liste des candidats pour ce post:</h4>
@@ -29,6 +29,37 @@
 
     {% endif %}
 
+    <h4>Catégorie(s):</h4>
+    <div class="row">
+    {% for cat in categories %}
+    <div class="col-md-4">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" id="{{cat.id}}" {{(advert.categories|length >= loop.index) and advert.categories[loop.index -1].id == cat.id ? 'checked' : null }}> {{ cat.name }}
+        </label>
+      </div>
+    </div>
+    
+    {% endfor %}
+    </div> {# /row catégorie #}
+
+    <div class="row">
+      {% if listAdvertSkill|length > 0 %}
+        <p>Compétence(s) nécéssaire(s):</p>
+        <ul>
+          {% for advertSkill in listAdvertSkill %}    
+          <li>{{ advertSkill.skill.name}} : niveau {{ advertSkill.level }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+  <p>
+    Cette annonce est parue dans les catégories suivantes :
+    {% for category in advert.categories %}
+      {{ category.name }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </p>
   <p>
     <a href="{{ path('oc_platform_home') }}" class="btn btn-default">
       <i class="glyphicon glyphicon-chevron-left"></i>
@@ -43,5 +74,4 @@
       Supprimer l'annonce
     </a>
   </p>
-
 {% endblock %}
