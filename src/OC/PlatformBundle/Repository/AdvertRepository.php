@@ -75,5 +75,41 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         $qb->andWhere('a.date BETWEEN :start AND :end')
            ->setParameter('start', new \Datetime(date('Y').'-01-01'))
            ->setParameter('end', new \Datetime(date('Y').'-12-31'));
+        
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getAdvertWithApplications()
+    {
+        /*******************************************************************************************************************************
+         Création d'une jointure avec la méthode leftJoin() (ou  innerJoin() pour faire l'équivalent d'un "INNER JOIN").
+         Premier argument: l'attribut de l'entité principale (celle qui est dans le "FROM" de la requête) sur lequel faire la jointure. 
+                           Dans l'exemple, l'entité "Advert" possède un attribut applications.
+         Deuxième argument: L'alias de l'entité jointe (choisi de façon arbitraire).
+
+         Puis on sélectionne également l'entité jointe, via un "addSelect()".
+         En effet, un "select('app')" tout court aurait écrasé le "select('a')" déjà fait par le "createQueryBuilder()".
+         *******************************************************************************************************************************/
+
+        $qb = $this->createQueryBuilder('a')
+                   ->leftJoin('a.applications', 'app')
+                   ->addSelect('app');
+        
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getAdvertWithCategories(array $categoryNames)
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        // Jointure avec "Category"
+        // Dans l'entité "Advert" $private $categories
+        $qb->innerJoin('a.categories', 'c')
+           ->addSelect('c');
+        
+        // On filtre le nom des catégories à l'aide d'un "IN"
+        $qb->where($qb->expr()->in('c.name', $categoryNames));
+
+        return $qb->getQuery()->getResult();
     }
 }

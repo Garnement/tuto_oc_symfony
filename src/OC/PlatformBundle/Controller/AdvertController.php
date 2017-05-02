@@ -71,7 +71,7 @@ class AdvertController extends Controller
 
         // Création de l'entité Advert
         $advert = new Advert();
-        $advert->setTitle('Recherche developpeur Symfony');
+        $advert->setTitle('Recherche developpeur Symfony v'.rand(1,999));
         $advert->setAuthor('Alexandre');
         $advert->setContent("Nous recherchons un developpeur Symfony débutant bla bla...");
         // On ne peut pas définir de date car ces attributs
@@ -265,5 +265,18 @@ class AdvertController extends Controller
         $em->flush();
 
         return new Response('Image modifiée.');
+    }
+
+    public function listAction()
+    {
+        $listAdverts = $this->getDoctrine()
+                            ->getManager()
+                            ->getRepository('OCPlatformBundle:Advert')
+                            ->getAdvertWithApplications();
+        
+        foreach($listAdverts as $advert)
+        {
+            $advert->getApplications();
+        }
     }
 }
