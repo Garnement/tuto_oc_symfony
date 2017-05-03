@@ -1,7 +1,7 @@
-core:
-    resource: "@CoreBundle/Controller/"
-    type:     annotation
-    prefix:   /
+oc_core:
+    resource: "@CoreBundle/Controller/CoreController.php"
+    type: annotation
+    prefix: /
 
 oc_platform:
     resource: "@OCPlatformBundle/Resources/config/routing.yml"

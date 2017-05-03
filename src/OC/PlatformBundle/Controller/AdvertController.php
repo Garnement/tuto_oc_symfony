@@ -279,4 +279,16 @@ class AdvertController extends Controller
             $advert->getApplications();
         }
     }
+
+    public function testSlugAction()
+    {
+        $advert = new Advert();
+        $advert->setTitle('Recherche developpeur');
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($advert);
+        $em->flush(); // C'est à cet instant qu'est généré le slug
+
+        return new Response('Slug généré: '. $advert->getSlug());
+    }
 }

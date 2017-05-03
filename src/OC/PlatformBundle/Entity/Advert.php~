@@ -5,6 +5,8 @@ namespace OC\PlatformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
  * Advert
  *
@@ -73,11 +75,17 @@ class Advert
      */
     private $updatedAt;
 
-
      /**
-     * @ORM\Column(name="nb_applications", type="integer", nullable=true)
+     * @ORM\Column(name="nb_applications", type="integer")
      */
-     private $nbApplications;
+     private $nbApplications = 0;
+
+      /**
+      * @Gedmo\Slug(fields={"title"})
+      * @ORM\Column(name="slug", type="string", length=255, unique=true)
+      */
+      private $slug;
+     
     
 
 
@@ -343,5 +351,39 @@ class Advert
     public function updateDate()
     {
         $this->setUpdatedAt(new \Datetime());
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return Advert
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    public function increaseApplication()
+    {
+        $this->nbApplications++;
+    }
+
+    public function decreaseApplication()
+    {
+        $this->nbApplications--;
     }
 }
