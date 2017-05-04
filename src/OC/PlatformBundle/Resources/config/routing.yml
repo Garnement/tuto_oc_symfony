@@ -16,7 +16,7 @@ oc_platform_view:
 
 oc_platform_add:
     path: /add
-    defaults: { _controller: OCPlatformBundle:Advert:add }
+    defaults: _controller: OCPlatformBundle:Advert:add
 
 oc_platform_edit:
     path: /edit/{id}
