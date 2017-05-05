@@ -176,7 +176,7 @@ class AdvertController extends Controller
         // On boucle sur les catégories pour les lier à l'annonce
         foreach ($categories as $category)
         {
-            $advert->addCategory($category);
+            //$advert->addCategory($category);
         }
 
         /* Pour persister le changement dans la relation, il faut persister l'entité propriétaire.

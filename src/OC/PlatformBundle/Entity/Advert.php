@@ -86,6 +86,11 @@ class Advert
       */
       private $slug;
      
+    /**
+    * @ORM\ManyToMany(targetEntity="OC\PlatformBundle\Entity\Category", cascade={"persist"})
+    * @ORM\JoinTable(name="oc_advert_category")
+    */
+    private $categories;
     
 
 
@@ -97,11 +102,6 @@ class Advert
         $this->categories   = new ArrayCollection();
     }
 
-    /**
-    * @ORM\ManyToMany(targetEntity="OC\PlatformBundle\Entity\Category", cascade={"persist"})
-    * @ORM\JoinTable(name="oc_advert_category")
-    */
-    private $categories;
 
     /**
      * Get id
