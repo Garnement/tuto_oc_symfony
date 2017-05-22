@@ -20,16 +20,29 @@ class AdvertController extends Controller
         if($page < 1)
         {
             // Envoi d'une erreur en cas de page inférieur à 1
-            throw new NotFoundHtttpException('Page" '.$page.' " inexsistante.');
+            throw new NotFoundHttpException('Page" '.$page.' " inexsistante.');
         }
 
-        $repo = $this->getDoctrine()
-                     ->getManager()
-                     ->getRepository('OCPlatformBundle:Advert');
-        
-        $listAdverts = $repo->findAll();
+        // Nb d'annonce par page
+        // Mais bien sûr il faudrait utiliser un paramètre, et y accéder via $this->container->getParameter('nb_per_page')
+        $nbPerPage = 3;
 
-        return $this->render('OCPlatformBundle:Advert:index.html.twig', array('listAdverts' => $listAdverts));
+        $listAdverts = $this->getDoctrine()
+                     ->getManager()
+                     ->getRepository('OCPlatformBundle:Advert')
+                     ->getAdverts($page, $nbPerPage);
+        
+        // Calcul du nb de page grâce au count qui retourne le nb total d'annonces
+        $nbPages = ceil(count($listAdverts) / $nbPerPage);
+
+        if ($page > $nbPages)
+        {
+            throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+        }
+
+        return $this->render('OCPlatformBundle:Advert:index.html.twig', array('listAdverts' => $listAdverts,
+                                                                              'nbPages'     => $nbPages,
+                                                                              'page'        => $page));
     }
 
     public function viewAction($id, Request $request) 

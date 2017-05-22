@@ -7,18 +7,35 @@
 {% block ocplatform_body %}
 
   <h2>Liste des annonces</h2>
-  <ul>
+    <div class="row">
+    
     {% for advert in listAdverts %}
-      <li>
-        <a href="{{ path('oc_platform_view', {'id': advert.id}) }}">
-          {{ advert.title }}
-        </a>
-        par {{ advert.author }},
-        le {{ advert.date|date('d/m/Y') }}
-      </li>
-    {% else %}
-      <li>Pas (encore !) d'annonces</li>
+      <div class="col-md-4">
+        <div class="thumbnail">
+          <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}" height="200" width="200">
+          <div class="caption">
+            <h5>{{ advert.title }}</h5>
+            <p>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</p>
+          </div> <!-- /caption -->
+          <a href="{{ path('oc_platform_view', {'id': advert.id}) }}" class="btn btn-primary">Voir</a>
+        </div> <!-- /thumbnail -->
+      </div> <!-- /col-md-4 -->
+      {% else %}
+        <p>Pas encore d'annonces disponibles</p>
     {% endfor %}
-  </ul>
+    </div>
+  <div class="row text-center">
+   <nav aria-label="Page Navigation">
+    <ul class="pagination">
+      <li><a href="{{ path('oc_platform_home', {'page': page-1}) }}" aria-label="previous"><span aria-hidden="true">&laquo;</span></a></li>
+      {% for p in range(1, nbPages) %}
+        <li {% if p == page %} class="active"{% endif %}>
+          <a href="{{ path('oc_platform_home', {'page': p}) }}">{{ p }}</a>
+        </li>
+      {% endfor %}
+      <li><a href="{{ path('oc_platform_home', {'page': page+1}) }}" aria-label="next"><span aria-hidden="true">&raquo;</span></a></li>
+    </ul>
+   </nav>
+  </div>  
 
 {% endblock %}
