@@ -7,11 +7,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
 use OC\PlatformBundle\Entity\AdvertSkill;
 use OC\PlatformBundle\Antispam;
+use OC\PlatformBundle\Purger;
 
 class AdvertController extends Controller
 {
@@ -89,6 +97,24 @@ class AdvertController extends Controller
         $advert->setContent("Nous recherchons un developpeur Symfony débutant bla bla...");
         // On ne peut pas définir de date car ces attributs
         // sont définis automatiquement dans le constructeur
+
+        // On crée le FormBuilder grâce au service form factory
+        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $advert);
+
+        // On ajoute les champs de l'entité que l'on veut à notre formulaire
+        $formBuilder->add('date', DateType::class)
+                    ->add('title', TextType::class)
+                    ->add('content', TextareaType::class)
+                    ->add('author', TextType::class)
+                    ->add('published', CheckboxType::class)
+                    ->add('save', SubmitType::class);
+
+        // A partir du FormBuilder, on génère le formulaire
+        $form = $formBuilder->getForm();
+
+        // On passe la méthode createView() du formulaire à la vue 
+        // afin qu'elle puisse afficher le formulaire toute seule
+        return $this->render('OCPlatformBundle:Advert:add.html.twig', array( 'form' => $form->createView()));
 
         // Création de l'entité Image
         $img = new Image();
@@ -304,4 +330,19 @@ class AdvertController extends Controller
 
         return new Response('Slug généré: '. $advert->getSlug());
     }
+
+  public function purgeAction($days, Request $request)
+  {
+    // On récupère le service de purge
+    $purgerAdvert = $this->get('oc_platform.purger.advert');
+
+    // On lance la purge
+    $purgerAdvert->purge($days);
+
+    // MEssage flash
+    $request->getSession()->getFlashBag()->add('info', 'Annonces purgées');
+
+    // Redirection vers l'accueil général
+    return $this->redirectToRoute('oc_core_home');
+  }  
 }

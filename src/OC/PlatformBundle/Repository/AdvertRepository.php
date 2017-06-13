@@ -135,4 +135,19 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
         # On retourne le resultat
         return new Paginator($query, true);
     }
+
+  public function getAdvertsToPurge(\Datetime $date)
+  {
+    // On retourne la liste des annonces à purger
+    return $this->createQueryBuilder('a')
+                // on vérifie la date la dernière modification
+                ->where('a.updatedAt <= :date')
+                // si pas de date de modification, on vérifie la date de création
+                ->orWhere('a.updatedAt IS NULL AND a.date <= :date')
+                // On vérifie qu il n y ait aucune candidature
+                ->andWhere('a.applications IS EMPTY')
+                ->setParameter('date', $date)
+                ->getQuery()
+                ->getResult();
+  }  
 }

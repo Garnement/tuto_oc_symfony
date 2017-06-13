@@ -23,6 +23,7 @@ class ApplicationRepository extends \Doctrine\ORM\EntityRepository
         // On ne retourne que $limit résultats
         $qb->setMaxResults($limit);
 
+        // On retourne le résultat
         return $qb->getQuery()->getResult();
     }
 }

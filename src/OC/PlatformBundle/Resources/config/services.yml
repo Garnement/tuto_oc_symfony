@@ -22,3 +22,8 @@ services:
              - "@oc_platform.email.application_mailer"
         tags:
              - { name: doctrine.event_listener, event: postPersist }
+    
+    oc_platform.purger.purger.advert:
+        class: OC\PlatformBundle\Purger
+        arguments:
+            - "@doctrine.orm.entity_manager"
