@@ -116,6 +116,27 @@ class AdvertController extends Controller
         // afin qu'elle puisse afficher le formulaire toute seule
         return $this->render('OCPlatformBundle:Advert:add.html.twig', array( 'form' => $form->createView()));
 
+        if($request->isMethod('POST'))
+        {
+            /* On fait le lien Requête <--> Formulaire
+               A partir de maintenant, la variable $advert contient les valeurs entrées dans le formulaire par le visiteur */
+            $form->handleRequest($request);
+
+            // On vérifie que les valeurs entrées sont correctes
+            if($form->isValid())
+            {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($advert);
+                $em->flush();
+
+                $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée');
+
+                return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
+            }
+        }
+
+        return $this->render('OCPlatformBundle:Advert:add.html.twig', array( 'form' => $form->createView()));
+
         // Création de l'entité Image
         $img = new Image();
         $img->setUrl("http://lorempicsum.com/simpsons/350/200/".rand(1,9));
