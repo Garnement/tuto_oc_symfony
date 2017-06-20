@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+use OC\PlatformBundle\Form\AdvertType;
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
@@ -89,24 +90,23 @@ class AdvertController extends Controller
         // Récupération de l'EntityManager
         $em = $this->getDoctrine()->getManager();
 
-
         // Création de l'entité Advert
         $advert = new Advert();
-        $advert->setTitle('Recherche developpeur Symfony v'.rand(1,999));
-        $advert->setAuthor('Alexandre');
-        $advert->setContent("Nous recherchons un developpeur Symfony débutant bla bla...");
-        // On ne peut pas définir de date car ces attributs
-        // sont définis automatiquement dans le constructeur
-
+        
+        $form = $this->get('form.factory')->create(AdvertType::class, $advert);
+        
         // On crée le FormBuilder grâce au service form factory
         $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $advert);
 
+        /**********************************************************************************************************************
+            CREATION DU FORMULAIRE DANS LE CONTROLEUR // A EVITER 
+
         // On ajoute les champs de l'entité que l'on veut à notre formulaire
         $formBuilder->add('date', DateType::class)
-                    ->add('title', TextType::class)
-                    ->add('content', TextareaType::class)
-                    ->add('author', TextType::class)
-                    ->add('published', CheckboxType::class)
+                    ->add('title', TextType::class, array('label' => 'Titre', 'required' =>true))
+                    ->add('content', TextareaType::class, array('label' => 'Descriptif de l\'annonce'))
+                    ->add('author', TextType::class, array( 'label' => 'Auteur',))
+                    ->add('published', CheckboxType::class, array('label' => 'Publier l\'annonce ?', 'required' => false))
                     ->add('save', SubmitType::class);
 
         // A partir du FormBuilder, on génère le formulaire
@@ -116,15 +116,16 @@ class AdvertController extends Controller
         // afin qu'elle puisse afficher le formulaire toute seule
         return $this->render('OCPlatformBundle:Advert:add.html.twig', array( 'form' => $form->createView()));
 
-        if($request->isMethod('POST'))
-        {
-            /* On fait le lien Requête <--> Formulaire
-               A partir de maintenant, la variable $advert contient les valeurs entrées dans le formulaire par le visiteur */
+            On fait le lien Requête <--> Formulaire
+               A partir de maintenant, la variable $advert contient les valeurs entrées dans le formulaire par le visiteur 
             $form->handleRequest($request);
 
+        *********************************************************************************************************************/
+        // 
+        if($request->isMethod('POST') && $form->handleRquest($request)->isValid())
+        {
+
             // On vérifie que les valeurs entrées sont correctes
-            if($form->isValid())
-            {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($advert);
                 $em->flush();
@@ -133,7 +134,6 @@ class AdvertController extends Controller
 
                 return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
             }
-        }
 
         return $this->render('OCPlatformBundle:Advert:add.html.twig', array( 'form' => $form->createView()));
 
