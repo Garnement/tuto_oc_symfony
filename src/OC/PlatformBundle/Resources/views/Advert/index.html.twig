@@ -12,7 +12,7 @@
     {% for advert in listAdverts %}
       <div class="col-md-4">
         <div class="thumbnail">
-          <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}" height="200" width="200">
+          <img src="{{ advert.image.webPath }}" alt="{{ advert.image.alt }}" height="200" width="200">
           <div class="caption">
             <h5>{{ advert.title }}</h5>
             <p>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</p>

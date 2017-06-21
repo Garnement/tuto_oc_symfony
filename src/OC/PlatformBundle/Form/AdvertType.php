@@ -12,6 +12,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class AdvertType extends AbstractType
 {
@@ -20,17 +22,17 @@ class AdvertType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('date', DateType::class)
-                 ->add('title', TextType::class)
-                 ->add('author', TextType::class, array('label'=>'Auteur'))
-                 ->add('content', TextType::class)
-                 ->add('image', ImageType::class)
-                 ->add('categories', EntityType::class, array(
-                     'class' => 'OCPlatformBundle:Category',
-                     'choice_label' => 'name',
-                     'multiple' => true,
-                     'expanded' => true))
-                 ->add('save', SubmitType::class);
+         $builder->add('date',          DateType::class, array('format' => 'dd/MM/yyyy'))
+                 ->add('title',         TextType::class)
+                 ->add('author',        TextType::class, array('label'=>'Auteur'))
+                 ->add('content',       TextType::class)
+                 ->add('image',         ImageType::class)
+                 ->add('categories',    EntityType::class, array(
+                        'class' => 'OCPlatformBundle:Category',
+                        'choice_label' => 'name',
+                        'multiple' => true,
+                        'expanded' => true))
+                 ->add('save',          SubmitType::class, array('label' =>'Enregistrer'));
         
         // On ajoute une fonction pour écouter l'évenement
         $builder->addEventListener(
@@ -47,7 +49,7 @@ class AdvertType extends AbstractType
                     return;
                 }
                 // Si l'annonce n'est pas publiée, ou si elle n'existe pas encore en base (id est null)
-                if(!$advert->getPusblished() || null === $advert->getId())
+                if(!$advert->getPublished() || null === $advert->getId())
                 {
                     // Alors on ajoute le champ published
                     $event->getForm()->add('published', CheckboxType::class, array('required'  => false));

@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 use OC\PlatformBundle\Form\AdvertType;
+use OC\PlatformBundle\Form\AdvertEditType;
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
@@ -96,7 +97,7 @@ class AdvertController extends Controller
         $form = $this->get('form.factory')->create(AdvertType::class, $advert);
         
         // On crée le FormBuilder grâce au service form factory
-        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $advert);
+        //$formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $advert);
 
         /**********************************************************************************************************************
             CREATION DU FORMULAIRE DANS LE CONTROLEUR // A EVITER 
@@ -122,9 +123,8 @@ class AdvertController extends Controller
 
         *********************************************************************************************************************/
         // 
-        if($request->isMethod('POST') && $form->handleRquest($request)->isValid())
+        if($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
-
             // On vérifie que les valeurs entrées sont correctes
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($advert);
@@ -226,15 +226,17 @@ class AdvertController extends Controller
         // Récupération de l'id
         $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
 
+        $form = $this->get('form.factory')->create(AdvertEditType::class, $advert);
+
         if (null === $advert)
         {
             throw new NotFoundHttpException('L\'annonce n°\' '.$id.' n\'existe pas.');
         }
 
-        $categories = $em->getRepository('OCPlatformBundle:Category')->findAll();
+        //$categories = $em->getRepository('OCPlatformBundle:Category')->findAll();
 
         // On boucle sur les catégories pour les lier à l'annonce
-        foreach ($categories as $category)
+        //foreach ($categories as $category)
         {
             //$advert->addCategory($category);
         }
@@ -251,19 +253,11 @@ class AdvertController extends Controller
             $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');      
 
             return $this->redirectToRoute('oc_platform_view', array('id' => $id));
-
         }
 
-        $advert = array(
-        'title'   => 'Recherche développpeur Symfony',
-        'id'      => $id,
-        'author'  => 'Alexandre',
-        'content' => 'Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…',
-        'date'    => new \Datetime()
-        );
-
         return $this->render('OCPlatformBundle:Advert:edit.html.twig', array(
-        'advert' => $advert
+        'advert' => $advert,
+        'form'   => $form->createView()
         ));
     }
 
