@@ -27,3 +27,9 @@ services:
         class: OC\PlatformBundle\Purger
         arguments:
             - "@doctrine.orm.entity_manager"
+    
+    oc_platform.validator.antifloo:
+        class: OC\PlatformBundle\Validator\AntifloodValidator
+        arguments: ["@request_stack", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: validator.constraint_validator, alias: oc_platform_antiflood}

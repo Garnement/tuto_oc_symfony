@@ -26,6 +26,7 @@
       </ul>
   {% else %}
    <p> Soyez le premier à postuler !</p>
+   {{ form(form)}}
 
     {% endif %}
 
@@ -35,7 +36,8 @@
     <div class="col-md-4">
       <div class="checkbox">
         <label>
-          <input type="checkbox" id="{{cat.id}}" {{(advert.categories|length >= loop.index) and advert.categories[loop.index -1].id == cat.id ? 'checked' : null }}> {{ cat.name }}
+          <input type="checkbox" id="{{cat.id}}" {% for categorie in advert.categories %} {{cat.id == categorie.id ? 'checked' :''}} {% endfor %}> {{ cat.name }}
+          {#<input type="checkbox" id="{{cat.id}}" {{(advert.categories|length >= loop.index) and advert.categories[loop.index -1].id == cat.id ? 'checked' : null }}> {{ cat.name }}#}
         </label>
       </div>
     </div>

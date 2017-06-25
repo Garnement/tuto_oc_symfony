@@ -34,7 +34,6 @@ class AdvertType extends AbstractType
                         'expanded' => true))
                  ->add('save',          SubmitType::class, array('label' =>'Enregistrer'));
         
-        // On ajoute une fonction pour écouter l'évenement
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA, //1er argument : l'évenement, ici pre_set_data
             
@@ -48,6 +47,7 @@ class AdvertType extends AbstractType
                 {
                     return;
                 }
+                
                 // Si l'annonce n'est pas publiée, ou si elle n'existe pas encore en base (id est null)
                 if(!$advert->getPublished() || null === $advert->getId())
                 {

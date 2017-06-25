@@ -17,10 +17,13 @@
 
   {# Les erreurs générales du formulaire. #}
   {{ form_errors(form) }}
+
+  {% if form.date is defined %}
   <div class="form-group">
     
     {{ form_row(form.date) }}
   </div>
+  {% endif %}
   {# Génération du label + error + widget pour un champ. #}
 
   {# Génération manuelle et éclatée : #}
@@ -32,7 +35,7 @@
     {{ form_errors(form.title) }}
 
     <div class="col-sm-10">
-      {# Génération de l'input. #}
+      {# Génération de l\'input. #}
       {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
     </div>
   </div>
@@ -69,7 +72,7 @@
     </div>
   
   </div>
-  {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+  {# Pour le bouton, pas de label ni d\'erreur, on affiche juste le widget #}
   {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
 
   {# Génération automatique des champs pas encore écrits.
